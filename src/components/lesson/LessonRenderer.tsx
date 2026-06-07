@@ -1,12 +1,15 @@
 import React from 'react';
 import Button from '@/components/ui/Button';
+import Link from 'next/link';
 
 interface LessonContentProps {
   lesson: any;
   onComplete: () => void;
+  practiceUrl?: string;
+  nextLessonUrl?: string;
 }
 
-const LessonRenderer: React.FC<LessonContentProps> = ({ lesson, onComplete }) => {
+const LessonRenderer: React.FC<LessonContentProps> = ({ lesson, onComplete, practiceUrl, nextLessonUrl }) => {
   const { content } = lesson;
 
   return (
@@ -110,8 +113,28 @@ const LessonRenderer: React.FC<LessonContentProps> = ({ lesson, onComplete }) =>
       })}
 
       <section style={{ marginTop: '40px', paddingTop: '32px', borderTop: '1px solid var(--border)', textAlign: 'center' }}>
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '24px' }}>Ready for the next step?</h3>
-        <Button variant="primary" size="lg" onClick={onComplete}>Complete Lesson</Button>
+        {lesson.isCompleted ? (
+          <>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '24px', color: 'var(--accent-emerald)' }}>🎉 Lesson Completed!</h3>
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              {practiceUrl && (
+                <Link href={practiceUrl} style={{ textDecoration: 'none' }}>
+                  <Button variant="primary" size="lg">Go to Practice Arena</Button>
+                </Link>
+              )}
+              {nextLessonUrl && (
+                <Link href={nextLessonUrl} style={{ textDecoration: 'none' }}>
+                  <Button variant="secondary" size="lg">Continue to Day {lesson.day + 1}</Button>
+                </Link>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '24px' }}>Ready for the next step?</h3>
+            <Button variant="primary" size="lg" onClick={onComplete}>Complete Lesson</Button>
+          </>
+        )}
       </section>
     </div>
   );

@@ -43,30 +43,31 @@ const JSConsole = () => {
     return () => document.removeEventListener('fullscreenchange', handleChange);
   }, []);
 
-  const onDragStart = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     isDragging.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const onMouseMove = useCallback((e: MouseEvent) => {
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging.current || !containerRef.current) return;
     const panelsEl = containerRef.current.querySelector('.console-panels') as HTMLElement;
     if (!panelsEl) return;
+    
     const rect = panelsEl.getBoundingClientRect();
-    const newPercent = ((e.clientX - rect.left) / rect.width) * 100;
+    let newPercent = 50;
+    if (window.getComputedStyle(panelsEl).flexDirection === 'column') {
+      newPercent = ((e.clientY - rect.top) / rect.height) * 100;
+    } else {
+      newPercent = ((e.clientX - rect.left) / rect.width) * 100;
+    }
     setSplitPercent(Math.max(20, Math.min(80, newPercent)));
-  }, []);
+  };
 
-  const onMouseUp = useCallback(() => { isDragging.current = false; }, []);
-
-  useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, [onMouseMove, onMouseUp]);
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
 
   return (
     <div
@@ -80,6 +81,7 @@ const JSConsole = () => {
         background: isFullscreen ? 'var(--bg-primary)' : 'transparent',
         padding: isFullscreen ? '16px' : '0',
         boxSizing: 'border-box',
+        overflowY: isFullscreen ? 'auto' : 'visible',
       }}
     >
       {/* Toolbar */}
@@ -87,7 +89,7 @@ const JSConsole = () => {
         <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
           JavaScript Console
         </span>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
           <Button variant="outline" size="sm" onClick={() => setLogs([])}>Clear</Button>
           <Button variant="secondary" size="sm" onClick={runCode}>▶ Run</Button>
           <button
@@ -113,10 +115,10 @@ const JSConsole = () => {
       {/* Panels */}
       <div
         className="console-panels"
-        style={{ flex: 1, display: 'flex', gap: 0, minHeight: 0, position: 'relative' }}
+        style={{ flex: 1, display: 'flex', gap: 0, minHeight: 0, position: 'relative', '--split-percent': `${splitPercent}%` } as React.CSSProperties}
       >
         {/* Editor */}
-        <div style={{ width: `${splitPercent}%`, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div className="console-editor-pane" style={{ display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0 }}>
           <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
             JavaScript Editor
           </label>
@@ -127,7 +129,7 @@ const JSConsole = () => {
             style={{
               flex: 1,
               width: '100%',
-              minHeight: '200px',
+              minHeight: '60px',
               background: 'var(--bg-secondary)',
               color: 'var(--accent-emerald)',
               border: '1px solid var(--border)',
@@ -137,48 +139,57 @@ const JSConsole = () => {
               fontSize: '0.9rem',
               resize: 'none',
               outline: 'none',
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain',
             }}
           />
         </div>
 
         {/* Drag Handle */}
         <div
-          onMouseDown={onDragStart}
+          className="console-dragger"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
           title="Drag to resize"
           style={{
-            width: '8px',
             background: 'var(--border)',
-            cursor: 'col-resize',
             flexShrink: 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'background var(--transition-fast)',
             userSelect: 'none',
+            touchAction: 'none',
           }}
           onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-blue)')}
           onMouseLeave={e => (e.currentTarget.style.background = 'var(--border)')}
         >
-          <div style={{ width: '2px', height: '40px', background: 'currentColor', borderRadius: '1px', opacity: 0.5 }} />
+          <div className="console-dragger-line" style={{ background: 'currentColor', borderRadius: '1px', opacity: 0.5 }} />
         </div>
 
         {/* Output */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div className="console-output-pane" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0 }}>
           <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
             Console Output
           </label>
           <div style={{
             flex: 1,
-            minHeight: '200px',
+            minHeight: '60px',
             background: 'var(--bg-primary)',
             color: 'var(--text-main)',
             border: '1px solid var(--border)',
             borderLeft: 'none',
             borderRadius: '0 var(--radius-md) var(--radius-md) 0',
             padding: '16px',
+            paddingBottom: isFullscreen ? '16px' : '80px',
+            boxSizing: 'border-box',
             fontFamily: 'var(--font-mono)',
             fontSize: '0.9rem',
             overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
           }}>
             {logs.length === 0 ? (
               <span style={{ color: 'var(--text-dim)' }}>Run code to see output...</span>
@@ -199,15 +210,35 @@ const JSConsole = () => {
       </div>
 
       <style>{`
+        .console-editor-pane {
+          width: var(--split-percent);
+        }
+        .console-dragger {
+          width: 8px;
+          cursor: col-resize;
+          flex-direction: column;
+        }
+        .console-dragger-line {
+          width: 2px;
+          height: 40px;
+        }
         @media (max-width: 600px) {
           .console-panels {
             flex-direction: column !important;
           }
-          .console-panels > div:first-child {
+          .console-editor-pane {
             width: 100% !important;
+            height: var(--split-percent);
           }
-          .console-panels > div[style*="col-resize"] {
-            display: none !important;
+          .console-dragger {
+            width: 100% !important;
+            height: 12px;
+            cursor: row-resize;
+            flex-direction: row;
+          }
+          .console-dragger-line {
+            width: 40px;
+            height: 2px;
           }
         }
       `}</style>

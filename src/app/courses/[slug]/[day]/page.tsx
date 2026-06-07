@@ -66,7 +66,12 @@ export default function LessonPage({ params }: { params: Promise<{ slug: string,
 
   return (
     <div style={{ position: 'relative' }}>
-      <LessonRenderer lesson={lesson} onComplete={handleComplete} />
+      <LessonRenderer 
+        lesson={lesson} 
+        onComplete={handleComplete} 
+        practiceUrl={`/courses/${slug}/${dayNum}/practice`}
+        nextLessonUrl={hasNextLesson ? `/courses/${slug}/${dayNum + 1}` : undefined}
+      />
 
       {showSuccessModal && (
         <div style={{
@@ -117,40 +122,41 @@ export default function LessonPage({ params }: { params: Promise<{ slug: string,
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px', width: '100%', marginTop: '8px' }}>
-              {hasNextLesson ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', marginTop: '8px' }}>
+              <Link 
+                href={`/courses/${slug}/${dayNum}/practice`}
+                onClick={() => setShowSuccessModal(false)}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  background: 'var(--accent-blue)',
+                  color: 'white',
+                  borderRadius: 'var(--radius-md)',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  transition: 'var(--transition-fast)'
+                }}
+              >
+                Go to Practice Arena
+              </Link>
+
+              {hasNextLesson && (
                 <Link 
                   href={`/courses/${slug}/${dayNum + 1}`}
                   onClick={() => setShowSuccessModal(false)}
                   style={{
-                    flex: 1,
+                    width: '100%',
                     padding: '14px',
-                    background: 'var(--accent-emerald)',
-                    color: '#050B14',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-main)',
                     borderRadius: 'var(--radius-md)',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     textDecoration: 'none',
                     transition: 'var(--transition-fast)'
                   }}
                 >
                   Continue to Day {dayNum + 1}
-                </Link>
-              ) : (
-                <Link 
-                  href={`/courses/${slug}/${dayNum}/practice`}
-                  onClick={() => setShowSuccessModal(false)}
-                  style={{
-                    flex: 1,
-                    padding: '14px',
-                    background: 'var(--accent-blue)',
-                    color: 'white',
-                    borderRadius: 'var(--radius-md)',
-                    fontWeight: 700,
-                    textDecoration: 'none',
-                    transition: 'var(--transition-fast)'
-                  }}
-                >
-                  Go to Practice Arena
                 </Link>
               )}
             </div>

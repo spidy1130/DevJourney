@@ -83,17 +83,19 @@ const Navbar = () => {
 
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="mobile-menu glass" style={{
+        <div className="mobile-menu" style={{
           position: 'absolute',
           top: 'var(--header-height)',
           left: 0,
           right: 0,
+          background: 'var(--bg-primary)',
           borderBottom: '1px solid var(--border)',
           padding: '20px 24px',
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
           zIndex: 999,
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)',
         }}>
           <Link href="/courses" onClick={() => setMenuOpen(false)} style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Browse Courses</Link>
           <Link href="/roadmap" onClick={() => setMenuOpen(false)} style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Roadmap</Link>
