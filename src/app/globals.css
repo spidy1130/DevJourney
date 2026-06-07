@@ -1,25 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Colors */
-  --bg-primary: #0f172a;
-  --bg-secondary: #020617;
-  --surface: rgba(30, 41, 59, 0.7);
-  --border: rgba(255, 255, 255, 0.1);
-  
-  --accent-emerald: #10b981;
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
-  
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-
-  /* Shadows & Glass */
-  --glass-bg: rgba(15, 23, 42, 0.8);
-  --glass-blur: blur(12px);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  
   /* Layout */
   --sidebar-width: 280px;
   --header-height: 72px;
@@ -35,6 +16,49 @@
   /* Fonts */
   --font-inter: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+
+  /* Common Accents */
+  --accent-emerald: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  
+  /* Shared Base Shadows */
+  --glass-blur: blur(12px);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #020617;
+  --surface: rgba(30, 41, 59, 0.7);
+  --border: rgba(255, 255, 255, 0.1);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --glass-bg: rgba(15, 23, 42, 0.8);
+}
+
+:root[data-theme="amoled"] {
+  --bg-primary: #000000;
+  --bg-secondary: #000000;
+  --surface: rgba(15, 15, 15, 0.7);
+  --border: rgba(255, 255, 255, 0.05);
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  --text-dim: #71717a;
+  --glass-bg: rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme="light"], :root {
+  /* Light mode as fallback if data-theme isn't set, but script will set it */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --surface: rgba(255, 255, 255, 0.7);
+  --border: rgba(0, 0, 0, 0.1);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+  --glass-bg: rgba(255, 255, 255, 0.8);
 }
 
 * {

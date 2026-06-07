@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ProgressProvider } from "@/context/ProgressContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 export const metadata: Metadata = {
   title: "DevJourney | Master Coding Step-by-Step",
@@ -13,11 +14,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var saved = localStorage.getItem('devjourney-theme');
+                var sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (saved) {
+                  document.documentElement.setAttribute('data-theme', saved);
+                } else {
+                  document.documentElement.setAttribute('data-theme', sysDark ? 'dark' : 'light');
+                }
+              } catch(e) {}
+            `,
+          }}
+        />
+      </head>
       <body>
-        <ProgressProvider>
-          <main>{children}</main>
-        </ProgressProvider>
+        <ThemeProvider>
+          <ProgressProvider>
+            <main>{children}</main>
+          </ProgressProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

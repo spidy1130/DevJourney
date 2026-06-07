@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Button from './Button';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,8 +39,9 @@ const Navbar = () => {
           <Link href="/about" style={{ color: 'var(--text-muted)', fontWeight: 500 }}>About</Link>
         </div>
 
-        {/* Desktop Buttons */}
+        {/* Desktop Buttons & Theme */}
         <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <ThemeSwitcher />
           <Button variant="ghost" size="sm">Log in</Button>
           <Button variant="primary" size="sm">Get Started</Button>
         </div>
@@ -101,6 +103,7 @@ const Navbar = () => {
           <Link href="/roadmap" onClick={() => setMenuOpen(false)} style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Roadmap</Link>
           <Link href="/about" onClick={() => setMenuOpen(false)} style={{ color: 'var(--text-muted)', fontWeight: 500 }}>About</Link>
           <div style={{ display: 'flex', gap: '12px', paddingTop: '8px', borderTop: '1px solid var(--border)' }}>
+            <ThemeSwitcher />
             <Button variant="ghost" size="sm">Log in</Button>
             <Button variant="primary" size="sm">Get Started</Button>
           </div>
