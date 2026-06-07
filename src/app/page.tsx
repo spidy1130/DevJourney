@@ -48,7 +48,7 @@ export default function Home() {
             Learn step-by-step with guided lessons, interactive practice, and real-world projects. 
             No more tutorial hell—just structured growth.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
+          <div className="hero-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <Link href="/courses/html/1">
               <Button variant="primary" size="lg">Start Free Journey</Button>
             </Link>
@@ -62,7 +62,7 @@ export default function Home() {
       {/* Featured Courses Section */}
       <section style={{ padding: '80px 0' }}>
         <div className="container">
-          <div style={{ 
+          <div className="section-header" style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'flex-end',

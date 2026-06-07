@@ -138,3 +138,76 @@ button {
   animation: fadeIn 0.6s ease-out forwards;
 }
 
+/* =====================
+   Responsive Breakpoints
+   ===================== */
+
+/* Tablet: ≤ 1024px */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+/* Mobile: ≤ 768px */
+@media (max-width: 768px) {
+  /* Navbar: hide desktop links/actions, show hamburger */
+  .nav-links,
+  .nav-actions {
+    display: none !important;
+  }
+
+  .hamburger {
+    display: flex !important;
+  }
+
+  /* Container */
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Sidebar: hidden by default on mobile (toggled via JS state) */
+  .sidebar-mobile-hidden {
+    display: none !important;
+  }
+
+  .sidebar-mobile-open {
+    display: flex !important;
+    position: fixed !important;
+    top: var(--header-height) !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    z-index: 900 !important;
+    border-right: 1px solid var(--border) !important;
+  }
+
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 800;
+    top: var(--header-height);
+  }
+}
+
+/* Small mobile: ≤ 480px */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+
+  /* Hero section */
+  .hero-buttons {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Course section header */
+  .section-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+}

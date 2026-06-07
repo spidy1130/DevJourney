@@ -28,23 +28,24 @@ export default async function CourseLayout({
         flex: 1, 
         display: 'flex', 
         paddingTop: 'var(--header-height)',
-        height: 'calc(100vh - var(--header-height))'
+        height: 'calc(100vh - var(--header-height))',
+        position: 'relative',
       }}>
-        {/* Sidebar */}
+        {/* Sidebar — hidden on mobile, shown as drawer via CourseSidebar state */}
         <CourseSidebar course={course} />
 
-        {/* Main Content */}
+        {/* Main Content — always full width on mobile since sidebar is absolute */}
         <main style={{ 
           flex: 1, 
           overflowY: 'auto', 
           background: 'var(--bg-secondary)',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          minWidth: 0,
         }}>
-          {/* Internal Tabs */}
           <CourseTabs slug={course.slug} />
 
-          <div style={{ padding: '40px', maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+          <div style={{ padding: '24px', maxWidth: '900px', margin: '0 auto', width: '100%' }}>
             {children}
           </div>
         </main>
